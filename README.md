@@ -2,7 +2,7 @@
 
 ## Introduction
 
-An [MMRotate](https://github.com/open-mmlab/mmdetection/tree/main) Model Adapter implementation for Dataloop
+An [MMRotate](https://github.com/dataloop-ai-apps/mmrotate/tree/main) Model Adapter implementation for Dataloop
 
 ## Requirements
 
