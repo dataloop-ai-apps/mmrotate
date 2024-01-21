@@ -1,0 +1,83 @@
+{
+  "name": "mmrotate",
+  "displayName": "MMRotate Model",
+  "version": "v0.0.0",
+  "scope": "public",
+  "description": "MMRotate Model Application by OpenMMLab",
+  "attributes": {
+    "Provider": "OpenMMLab",
+    "Category": "Model",
+    "Computer Vision": "Object Detection",
+    "License": "Apache 2.0",
+    "Media Type": "Image"
+  },
+  "codebase": {
+    "type": "git",
+    "gitUrl": "https://github.com/dataloop-ai-apps/mmrotate.git",
+    "gitTag": "v0.0.0"
+  },
+  "components": {
+    "computeConfigs": [
+      {
+        "name": "mmrotate-deploy",
+        "runtime": {
+          "podType": "highmem-xs",
+          "concurrency": 1,
+          "runnerImage": "python:3.8",
+          "autoscaler": {
+            "type": "rabbitmq",
+            "minReplicas": 0,
+            "maxReplicas": 2
+          }
+        }
+      }
+    ],
+    "modules": [
+      {
+        "name": "mmrotate-module",
+        "entryPoint": "model_adapter.py",
+        "className": "MMRotate",
+        "computeConfig": "mmrotate-deploy",
+        "description": "MMRotate Module",
+        "initInputs": [
+          {
+            "type": "Model",
+            "name": "model_entity"
+          }
+        ],
+        "functions": [
+          {
+            "name": "predict_items",
+            "input": [
+              {
+                "type": "Item[]",
+                "name": "items",
+                "description": "List of items to run inference on"
+              }
+            ],
+            "output": [],
+            "displayName": "Predict Items",
+            "displayIcon": "",
+            "description": "MMRotate predict function"
+          }
+        ]
+      }
+    ],
+    "models": [
+      {
+        "name": "mmlab-mmrotate",
+        "moduleName": "mmrotate-module",
+        "scope": "project",
+        "status": "trained",
+        "configuration": {},
+        "supportedMethods": {
+          "load": true,
+          "predict": true,
+          "train": false,
+          "evaluate": true
+        },
+        "description": "MMRotate is an open source object detection toolbox based on PyTorch. It is a part of the OpenMMLab project."
+      }
+    ]
+  }
+}
