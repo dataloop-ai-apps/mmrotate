@@ -21,7 +21,7 @@
       {
         "name": "mmrotate-deploy",
         "runtime": {
-          "podType": "highmem-xs",
+          "podType": "regular-s",
           "concurrency": 1,
           "runnerImage": "python:3.8",
           "autoscaler": {
@@ -68,15 +68,38 @@
         "name": "mmlab-mmrotate",
         "moduleName": "mmrotate-module",
         "scope": "project",
-        "status": "trained",
-        "configuration": {},
+        "status": "pre-trained",
+        "configuration": {
+          "model_name": "rotated_faster_rcnn_r50_fpn_1x_dota_le90",
+          "config_file": "rotated_faster_rcnn_r50_fpn_1x_dota_le90.py",
+          "checkpoint_file": "rotated_faster_rcnn_r50_fpn_1x_dota_le90-0393aa5c.pth",
+          "device": "cpu",
+          "confidence_thr": 0.4
+        },
         "supportedMethods": {
           "load": true,
           "predict": true,
           "train": false,
           "evaluate": true
         },
-        "description": "MMRotate is an open source object detection toolbox based on PyTorch. It is a part of the OpenMMLab project."
+        "description": "MMRotate is an open source object detection toolbox based on PyTorch. It is a part of the OpenMMLab project.",
+        "labels": [
+          "plane",
+          "baseball-diamond",
+          "bridge",
+          "ground-track-field",
+          "small-vehicle",
+          "large-vehicle",
+          "ship",
+          "tennis-court",
+          "basketball-court",
+          "storage-tank",
+          "soccer-ball-field",
+          "roundabout",
+          "harbor",
+          "swimming-pool",
+          "helicopter"
+        ]
       }
     ]
   }
