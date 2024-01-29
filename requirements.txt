@@ -1,4 +1,4 @@
 ftfy
 regex
 mmrotate
-numpy==1.23.5
+numpy
