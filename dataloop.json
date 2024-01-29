@@ -23,7 +23,7 @@
         "runtime": {
           "podType": "regular-s",
           "concurrency": 1,
-          "runnerImage": "shadimahameeddl/openmmlabs:latest",
+          "runnerImage": "shadimahameeddl/mm3ddetection:latest",
           "autoscaler": {
             "type": "rabbitmq",
             "minReplicas": 0,

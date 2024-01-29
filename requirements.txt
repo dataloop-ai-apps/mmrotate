@@ -1,5 +1,4 @@
 ftfy
 regex
-openmim
 mmrotate
 numpy==1.23.5
