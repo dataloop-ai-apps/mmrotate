@@ -14,11 +14,15 @@ logger = logging.getLogger('MMRotate')
                               name='model-adapter',
                               init_inputs={'model_entity': dl.Model})
 class MMRotate(dl.BaseModelAdapter):
+    def __init__(self, model_entity: dl.Model):
+        self.model = None
+        self.confidence_thr = model_entity.configuration.get('confidence_thr', 0.4)
+        self.device = model_entity.configuration.get('device', None)
+        super(MMRotate, self).__init__(model_entity=model_entity)
+
     def load(self, local_path, **kwargs):
-        model_name = self.model_entity.configuration.get('model_name',
-                                                         'rotated_faster_rcnn_r50_fpn_1x_dota_le90')
-        config_file = self.model_entity.configuration.get('config_file',
-                                                          'rotated_faster_rcnn_r50_fpn_1x_dota_le90.py')
+        model_name = self.model_entity.configuration.get('model_name', 'rotated_faster_rcnn_r50_fpn_1x_dota_le90')
+        config_file = self.model_entity.configuration.get('config_file', 'rotated_faster_rcnn_r50_fpn_1x_dota_le90.py')
         checkpoint_file = self.model_entity.configuration.get('checkpoint_file',
                                                               'rotated_faster_rcnn_r50_fpn_1x_dota_le90-0393aa5c.pth')
 
@@ -29,16 +33,15 @@ class MMRotate(dl.BaseModelAdapter):
                                                stderr=subprocess.PIPE,
                                                shell=True)
             download_status.wait()
+            (out, err) = download_status.communicate()
             if download_status.returncode != 0:
-                (out, err) = download_status.communicate()
-                raise Exception(f'Failed to download mmrotate artifacts: {err}')
+                raise Exception(f'Failed to download MMRotate artifacts: {err}')
+            logger.info(f"MMRotate artifacts downloaded successfully, Loading Model {out}")
 
-        logger.info("MMDetection artifacts downloaded successfully, Loading Model")
-        device = self.model_entity.configuration.get('device', 'cuda:0')
-        if device == 'cuda:0':
-            device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-        self.confidence_thr = self.model_entity.configuration.get('confidence_thr', 0.4)
-        self.model = init_detector(config_file, checkpoint_file, device=device)  # or device='cuda:0'
+        if self.device is None:
+            self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+        logger.info(f"Loading model on device {self.device}")
+        self.model = init_detector(config_file, checkpoint_file, device=self.device)
         logger.info("Model Loaded Successfully")
 
     def predict(self, batch, **kwargs):
@@ -51,13 +54,13 @@ class MMRotate(dl.BaseModelAdapter):
                 bbox_result, segm_result = detections
             else:
                 bbox_result, segm_result = detections, None
+            # create list of label id per prediction from structure : {label_id: [bbox1, bbox2, ...], ...}
             labels = [
                 np.full(bbox.shape[0], i, dtype=np.int32) for i, bbox in enumerate(bbox_result)
             ]
             labels = np.concatenate(labels)
             bboxes = np.vstack(bbox_result)
-            for bbox, label in zip(bboxes,
-                                   labels):
+            for bbox, label in zip(bboxes, labels):
                 confidence = bbox[5]
                 if confidence >= self.confidence_thr:
                     xc, yc, w, h, ag = bbox[:5]

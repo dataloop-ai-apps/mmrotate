@@ -23,7 +23,7 @@
         "runtime": {
           "podType": "regular-s",
           "concurrency": 1,
-          "runnerImage": "shadimahameeddl/mm3ddetection:latest",
+          "runnerImage": "shadimahameeddl/mmrotate-dl:latest",
           "autoscaler": {
             "type": "rabbitmq",
             "minReplicas": 0,
@@ -55,7 +55,13 @@
                 "description": "List of items to run inference on"
               }
             ],
-            "output": [],
+            "output": [
+              {
+                "type": "Annotations[]",
+                "name": "annotations",
+                "description": "List of predictions"
+              }
+            ],
             "displayName": "Predict Items",
             "displayIcon": "",
             "description": "MMRotate predict function"
