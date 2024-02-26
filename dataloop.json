@@ -1,7 +1,7 @@
 {
   "name": "mmrotate",
   "displayName": "MMRotate Model",
-  "version": "v0.2.0",
+  "version": "0.2.0",
   "scope": "public",
   "description": "MMRotate Model Application by OpenMMLab",
   "attributes": {
@@ -14,7 +14,7 @@
   "codebase": {
     "type": "git",
     "gitUrl": "https://github.com/dataloop-ai-apps/mmrotate.git",
-    "gitTag": "v0.2.0"
+    "gitTag": "0.2.0"
   },
   "components": {
     "computeConfigs": [
@@ -23,7 +23,7 @@
         "runtime": {
           "podType": "regular-s",
           "concurrency": 1,
-          "runnerImage": "shadimahameeddl/mmrotate-dl:latest",
+          "runnerImage": "http://gcr.io/viewo-g/piper/agent/runner/gpu/mmrotate:0.4.0",
           "autoscaler": {
             "type": "rabbitmq",
             "minReplicas": 0,
@@ -57,7 +57,12 @@
             ],
             "output": [
               {
-                "type": "Annotations[]",
+                "type": "Item[]",
+                "name": "items",
+                "description": "The same input images for prediction."
+              },
+              {
+                "type": "Annotation[]",
                 "name": "annotations",
                 "description": "List of predictions"
               }
@@ -65,6 +70,25 @@
             "displayName": "Predict Items",
             "displayIcon": "",
             "description": "MMRotate predict function"
+          },
+          {
+            "name": "predict_dataset",
+            "input": [
+              {
+                "type": "Dataset",
+                "name": "dataset",
+                "description": "The input dataset of the items required for prediction."
+              },
+              {
+                "type": "Json",
+                "name": "filters",
+                "description": "The DQL in json format to get all the items required for prediction."
+              }
+            ],
+            "output": [],
+            "displayName": "Predict Dataset",
+            "displayIcon": "",
+            "description": "Inference function of the model on a dataset."
           }
         ]
       }
