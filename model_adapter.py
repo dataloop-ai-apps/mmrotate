@@ -14,13 +14,9 @@ logger = logging.getLogger('MMRotate')
                               name='model-adapter',
                               init_inputs={'model_entity': dl.Model})
 class MMRotate(dl.BaseModelAdapter):
-    def __init__(self, model_entity: dl.Model):
-        self.model = None
-        self.confidence_thr = model_entity.configuration.get('confidence_thr', 0.4)
-        self.device = model_entity.configuration.get('device', None)
-        super(MMRotate, self).__init__(model_entity=model_entity)
 
     def load(self, local_path, **kwargs):
+        device = self.model_entity.configuration.get('device', None)
         model_name = self.model_entity.configuration.get('model_name', 'rotated_faster_rcnn_r50_fpn_1x_dota_le90')
         config_file = self.model_entity.configuration.get('config_file', 'rotated_faster_rcnn_r50_fpn_1x_dota_le90.py')
         checkpoint_file = self.model_entity.configuration.get('checkpoint_file',
@@ -38,14 +34,15 @@ class MMRotate(dl.BaseModelAdapter):
                 raise Exception(f'Failed to download MMRotate artifacts: {err}')
             logger.info(f"MMRotate artifacts downloaded successfully, Loading Model {out}")
 
-        if self.device is None:
-            self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-        logger.info(f"Loading model on device {self.device}")
-        self.model = init_detector(config_file, checkpoint_file, device=self.device)
+        if device is None:
+            device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+        logger.info(f"Loading model on device {device}")
+        self.model = init_detector(config_file, checkpoint_file, device=device)
         logger.info("Model Loaded Successfully")
 
     def predict(self, batch, **kwargs):
         logger.info(f"Predicting on batch of {len(batch)} images")
+        confidence_thr = self.model_entity.configuration.get('confidence_thr', 0.4)
         batch_annotations = list()
         for image in batch:
             image_annotations = dl.AnnotationCollection()
@@ -62,7 +59,7 @@ class MMRotate(dl.BaseModelAdapter):
             bboxes = np.vstack(bbox_result)
             for bbox, label in zip(bboxes, labels):
                 confidence = bbox[5]
-                if confidence >= self.confidence_thr:
+                if confidence >= confidence_thr:
                     xc, yc, w, h, ag = bbox[:5]
                     wx, wy = w / 2 * np.cos(ag), w / 2 * np.sin(ag)
                     hx, hy = -h / 2 * np.sin(ag), h / 2 * np.cos(ag)
