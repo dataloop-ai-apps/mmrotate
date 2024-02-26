@@ -57,7 +57,7 @@
             ],
             "output": [
               {
-                "type": "Annotations[]",
+                "type": "Annotation[]",
                 "name": "annotations",
                 "description": "List of predictions"
               }
