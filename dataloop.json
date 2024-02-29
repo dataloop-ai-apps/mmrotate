@@ -23,7 +23,7 @@
         "runtime": {
           "podType": "regular-s",
           "concurrency": 1,
-          "runnerImage": "http://gcr.io/viewo-g/piper/agent/runner/gpu/mmrotate:0.4.0",
+          "runnerImage": "gcr.io/viewo-g/piper/agent/runner/gpu/mmrotate:0.4.0",
           "autoscaler": {
             "type": "rabbitmq",
             "minReplicas": 0,
