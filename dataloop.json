@@ -47,6 +47,41 @@
         ],
         "functions": [
           {
+            "name": "evaluate_model",
+            "input": [
+              {
+                "type": "Model",
+                "name": "model",
+                "description": "Dataloop Model Entity"
+              },
+              {
+                "type": "Dataset",
+                "name": "dataset",
+                "description": "Dataloop Dataset Entity"
+              },
+              {
+                "type": "Json",
+                "name": "filters",
+                "description": "Dataloop Filter DQL"
+              }
+            ],
+            "output": [
+              {
+                "type": "Model",
+                "name": "model",
+                "description": "Dataloop Model Entity"
+              },
+              {
+                "type": "Dataset",
+                "name": "dataset",
+                "description": "Dataloop Dataset Entity"
+              }
+            ],
+            "displayName": "Evaluate a Model",
+            "displayIcon": "",
+            "description": "Function to evaluate MMRotate model performance"
+          },
+          {
             "name": "predict_items",
             "input": [
               {
