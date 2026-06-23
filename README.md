@@ -2,7 +2,7 @@
 
 ## Introduction
 
-An [MMRotate](https://github.com/dataloop-ai-apps/mmrotate/tree/main) Model Adapter implementation for Dataloop
+An [MMRotate](https://github.com/dataloop-ai-apps/mmrotate/tree/main) Model Adapter implementation for DDOE
 
 ## Requirements
 
@@ -95,7 +95,7 @@ The best way to perform predictions in the platform is to add a "Predict Node" t
 
 <img src="assets/pipeline.png" alt="Predict Pipeline Node">
 
-Click [here](https://developers.dataloop.ai/onboarding/08_pipelines/) for more information on Dataloop Pipelines.
+Click [here](https://developers.dataloop.ai/onboarding/08_pipelines/) for more information on DDOE Pipelines.
 
 ### Predicting with the SDK
 
